@@ -7,7 +7,7 @@ body
     max-width 1600px
     height 100vh
     margin 0 auto
-    background-color #96A8C8
+    background-color #C9D4E7
 
 main
     height 100%
@@ -28,6 +28,9 @@ main
 .header
     grid-column 1 / span 12
     align-self center
+    .header-link
+        color #000
+        text-decoration none
     .title
         font-size 2rem
     .caption
@@ -39,6 +42,14 @@ main
     flex-direction column
     grid-column 3 / span 8
     padding-bottom 2rem
+    .loader
+        display flex
+        justify-content center
+        align-items center
+        width 100%
+        height 200px
+        font-size 1rem
+        font-style italic
     .comics
         display flex
         flex-direction column
@@ -59,7 +70,7 @@ main
     justify-content center
     align-items center
     position fixed
-    bottom 2rem
+    bottom .6rem
     left calc(50% - 250px)
     width 500px
     padding .5rem
@@ -68,9 +79,10 @@ main
 .transcript
     grid-column 3 / span 8
     padding 0 2rem
+    color #888888
 
 .btn
-    background-color #6E7B91
+    background-color #5E7EB2
     border none
     border-radius .3rem
     color white
@@ -87,3 +99,12 @@ main
 
 .centered
     text-align center
+
+@keyframes flickerAnimation {
+    0% { opacity: 1 }
+    50% { opacity: 0 }
+    100% { opacity: 1 }
+}
+
+.flicker
+    animation flickerAnimation 1s infinite;

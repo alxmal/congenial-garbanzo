@@ -1,8 +1,17 @@
 /* Modules */
 const path = require('path');
+const webpack = require('webpack');
 const MiniCssExtract = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
+const API_URL = {
+    production: JSON.stringify('https://xkcd.com'),
+    development: JSON.stringify('http://localhost:8010/proxy')
+};
+
+const environment =
+    process.env.NODE_ENV === 'production' ? 'production' : 'development';
 
 module.exports = {
     entry: {
@@ -80,6 +89,9 @@ module.exports = {
         ]
     },
     plugins: [
+        new webpack.DefinePlugin({
+            API_URL: API_URL[environment]
+        }),
         new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
         new HtmlWebpackPlugin({
             template: 'src/index.pug',
