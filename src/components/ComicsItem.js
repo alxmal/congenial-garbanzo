@@ -1,25 +1,30 @@
-class ComicsItem {
-    constructor(data) {
-        this.data = data;
+import Component from '../lib/component';
+import store from '../store/index';
+
+class ComicsItem extends Component {
+    constructor() {
+        super({
+            store,
+            element: document.querySelector('.content')
+        });
     }
 
-    render = () => {
-        const viewBox = document.createElement('div');
-        viewBox.classList.add('viewer');
-        viewBox.innerHTML = `
-            <div>
+    render() {
+        store.state.isLoading
+            ? (this.element.innerHTML = `<div class="loader flicker">Loading...</div>`)
+            : (this.element.innerHTML = `
+            <div class="viewer">
                 <div class="comics">
                     <div class="comics-header">
-                        <h3 class="title">${this.data.title}</h3>
-                        <p class="published">${this.data.day}.${this.data.month}.${this.data.year}</p>
+                        <h3 class="title">${store.state.currentComics.title}</h3>
+                        <p class="published">${store.state.currentComics.day}.${store.state.currentComics.month}.${store.state.currentComics.year}</p>
                     </div>
-                    <img src="${this.data.img}" alt="${this.data.alt}"/>
+                    <img src="${store.state.currentComics.img}" alt="${store.state.currentComics.alt}"/>
                 </div>
-                <div class="transcript card">${this.data.transcript}</div>
+                <div class="transcript card">${store.state.currentComics.transcript}</div>
             </div>
-        `;
-        return viewBox;
-    };
+        `);
+    }
 }
 
 export default ComicsItem;

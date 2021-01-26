@@ -12,7 +12,7 @@ body
 main
     height 100%
 
-.wrapper
+.viewbox-wrapper
     display grid
     grid-auto-flow column
     grid-template-columns repeat(12, 1fr)
@@ -94,6 +94,8 @@ main
     &:hover
         opacity .8
         cursor pointer
+    &:active
+        transform translateY(2px)
     &:not(:last-child)
         margin-right 1rem
 

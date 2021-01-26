@@ -6,12 +6,13 @@ html(lang="en")
     title xkcd comics viewer
     body
         main
-            .wrapper
+            .viewbox-wrapper
                 .header
                     a(href="/" class="header-link")
                         h3(class='title centered') xkcd comics viewer
                     p(class='caption centered') A&nbsp;webcomic of&nbsp;romance, sarcasm, math, and language.
                 .viewbox.card
+                    .content
                 .controls.card
                     button(type="button" class="btn" data-action="first") First
                     button(type="button" class="btn" data-action="prev") < Prev

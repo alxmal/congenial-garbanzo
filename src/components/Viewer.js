@@ -1,27 +1,21 @@
 import Comics from './Comics';
 import ComicsItem from './ComicsItem';
 import randomize from '../utils/randomize';
+import store from '../store/index';
+import Component from '../lib/component';
 
-class Viewer {
+class Viewer extends Component {
     constructor(id) {
+        super({ store, element: document.querySelector('.viewbox') });
         this.id = id;
-        this.state = {
-            currentComicsData: {},
-            comicsNumRange: [1, 1],
-            numRangeIsUpdated: false,
-            origin: location.origin,
-            path: location.pathname
-        };
-        this.renderHook = document.querySelector('.viewbox');
-        this.init();
+        this.origin = store.state.origin;
+        this.path = store.state.path;
+        this.comicsItem = new ComicsItem();
+        this.request(this.path);
+        this.initControls();
     }
 
-    init() {
-        this.request(this.id);
-        this.initControls()
-    }
-
-    initControls() {
+    initControls = () => {
         let buttons = document.querySelectorAll('.btn');
         buttons.forEach(btn => {
             btn.addEventListener('click', e => {
@@ -30,29 +24,31 @@ class Viewer {
                 this.request(id);
             });
         });
-    }
+    };
 
     getId = action => {
         switch (action) {
             case 'first':
-                return `/${this.state.comicsNumRange[0]}`;
+                return `/${store.state.comicsNumRange[0]}`;
             case 'prev':
-                return `/${--this.state.currentComicsData.num}`;
+                return `/${--store.state.currentComics.num}`;
             case 'random':
-                let id = randomize(this.state.comicsNumRange);
+                let id = randomize(store.state.comicsNumRange);
                 return `/${id}`;
             case 'next':
-                return `/${++this.state.currentComicsData.num}`;
+                return `/${++store.state.currentComics.num}`;
             case 'last':
-                return `/${this.state.comicsNumRange[1]}`;
+                return `/${store.state.comicsNumRange[1]}`;
             default:
                 break;
         }
     };
 
-    request = id => {
+    request = (id = '') => {
         let urlString = `${API_URL}${id}/info.0.json`;
-        this.renderHook.innerHTML = `<div class="loader flicker">Loading...</div>`
+
+        store.dispatch('setIsLoading', true);
+
         fetch(urlString)
             .then(response => {
                 return response.json();
@@ -69,12 +65,15 @@ class Viewer {
                     transcript
                 );
 
-                this.update(data);
+                store.dispatch('setIsLoading', false);
 
-                // Don't update range flag
-                !this.state.numRangeIsUpdated
-                    ? (this.state.numRangeIsUpdated = true)
-                    : (this.state.numRangeIsUpdated = false);
+                store.dispatch('updateComics', data);
+                store.dispatch('updateNumRange', data.num);
+                store.dispatch('setNumRangeUpdated', true);
+
+                !store.state.isNumRangeUpdated
+                    ? store.dispatch('setNumRangeUpdated', true)
+                    : store.dispatch('setNumRangeUpdated', true);
 
                 this.setLocation(id);
                 this.render();
@@ -85,19 +84,9 @@ class Viewer {
         window.history.pushState('', '', id);
     };
 
-    update = data => {
-        this.state.currentComicsData = { ...data };
-        // Initial update range
-        if (!this.state.numRangeIsUpdated)
-            this.state.comicsNumRange[1] = data.num;
-    };
-
-    render = () => {
-        const comicsItem = new ComicsItem(this.state.currentComicsData);
-        const comicsEl = comicsItem.render();
-        this.renderHook.innerHTML = '';
-        this.renderHook.append(comicsEl);
-    };
+    render() {
+        this.comicsItem.render();
+    }
 }
 
 export default Viewer;
