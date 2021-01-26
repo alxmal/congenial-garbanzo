@@ -1,0 +1,21 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title xkcd comics viewer
+    body
+        main
+            .viewbox-wrapper
+                .header
+                    a(href="/" class="header-link")
+                        h3(class='title centered') xkcd comics viewer
+                    p(class='caption centered') A&nbsp;webcomic of&nbsp;romance, sarcasm, math, and language.
+                .viewbox.card
+                    .content
+                .controls.card
+                    button(type="button" class="btn" data-action="first") First
+                    button(type="button" class="btn" data-action="prev") < Prev
+                    button(type="button" class="btn" data-action="random") Random
+                    button(type="button" class="btn" data-action="next") Next >
+                    button(type="button" class="btn" data-action="last") Last
